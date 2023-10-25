@@ -1,6 +1,8 @@
 // DEPENDENCIES
 const express = require('express')
 const app = express()
+const { Sequelize } = require('sequelize')
+
 
 // CONFIGURATION / MIDDLEWARE
 require('dotenv').config()
@@ -13,6 +15,14 @@ app.get('/', (req, res) => {
         message: 'Welcome to the Tour API'
     })
 })
+// CONTROLLERS 
+const bandsController = require('./controllers/bands_controller')
+const eventsController= require('./controllers/event_controller')
+const stagesController= require('./controllers/stage_controller')
+app.use('/bands', bandsController)
+app.use('/events', eventsController)
+app.use('/stages', stagesController)
+
 
 // LISTEN
 app.listen(process.env.PORT, () => {
