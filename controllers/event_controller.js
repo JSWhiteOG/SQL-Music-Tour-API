@@ -1,7 +1,7 @@
 // DEPENDENCIES
 const events = require('express').Router()
 const db = require('../models')
-const { Event } = db 
+const { Event, Set_Time, Band, Stage, Stage_Event, Meet_Greet } = db 
 const { Op } = require('sequelize')
    
 // FIND ALL EVENTS
