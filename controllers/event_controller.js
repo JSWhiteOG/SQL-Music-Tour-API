@@ -21,10 +21,47 @@ events.get('/', async (req, res) => {
 
 
 // FIND A SPECIFIC EVENT
-events.get('/:id', async (req, res) => {
+events.get('/:name', async (req, res) => {
     try {
         const foundEvents = await Event.findOne({
-            where: { event_id: req.params.id }
+            where: { event_name: req.params.name },
+            include: [ {
+                model: Meet_Greet,
+                as: 'meet_greets',
+                include:{
+                    model: Band, 
+                    as: "bands",
+                    where: { band_id: { [Op.like]: `%${req.query.band ? req.query.band : ''}%` } }
+                }
+
+            }, { 
+                    model: Set_Time,
+                    as: "set_times",
+                    include: [{ 
+                        model: Band, 
+                        as: "bands",
+                        where: { band_id: { [Op.like]: `%${req.query.band ? req.query.band : ''}%` } }
+                    },{
+                        model: Stage,
+                        as: 'stages',
+                        where: { stage_id: { [Op.like]: `%${req.query.stage ? req.query.stage : ''}%` } }
+
+                    }]
+                    
+
+                    },
+                { 
+                    model: Stage, 
+                    as: "stages",
+                    include: { 
+                        model: Stage_Event, 
+                        as: "stage_events",
+                        where: { stage_id: { [Op.like]: `%${req.query.stage_event ? req.query.stage_event : ''}%` } }
+                    } 
+                },
+               
+                
+            ] 
         })
         res.status(200).json(foundEvents)
     } catch (error) {
